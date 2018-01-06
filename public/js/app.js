@@ -51,12 +51,15 @@ getBalances().then((balancesData) => {
 	let i = 0;
 	for(let p of pricesData){
 		for(let coin of Object.keys(balances)){
-			let pair = coin + "BTC";
 			if(coin === "BTC"){
 				pair = "BTCUSDT";
+				let price = balances[coin].balances[i] * parseFloat(p.prices.data[pair]);
+				prices[coin].push(price)
+			} else {
+				let pair = coin + "BTC";
+				let price = balances[coin].balances[i] * parseFloat(p.prices.data[pair] * p.prices.data["BTCUSDT"]);
+				prices[coin].push(price)
 			}
-			let price = balances[coin].balances[i] * parseFloat(p.prices.data[pair]);
-			prices[coin].push(price)
 		}
 		dates.push(p.prices.date);
 		i++;
