@@ -87,7 +87,6 @@ function loadCharts(interval) {
                 data: {
                     labels: dates,
                     datasets: [{
-                        label: coin + " Value",
                         backgroundColor: 'rgb(255, 99, 132)',
                         borderColor: 'rgb(255, 99, 132)',
                         data: prices[coin],
