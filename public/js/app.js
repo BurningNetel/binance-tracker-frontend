@@ -97,7 +97,7 @@ function loadCharts(interval) {
                     scales: {
                         yAxes: [{
                             ticks: {
-                                beginAtZero:true
+                                beginAtZero: false
                             }
                         }]
                     },
