@@ -26,7 +26,7 @@ app.get('/api/prices', (req, res) => {
     // Get the documents collection
     const collection = db.collection('prices');
     // Find some documents
-    collection.find({date: { $lt: (new Date().getTime() / 1000) - timeInterval }}).toArray((err, docs) => {
+    collection.find({date: { $gt: (new Date().getTime() / 1000) - timeInterval }}).toArray((err, docs) => {
         res.send(docs)
     });
 });
@@ -43,7 +43,7 @@ app.get('/api/balances', (req, res) => {
     // Get the documents collection
     const collection = db.collection('balances');
     // Find some documents
-    collection.find({date: { $lt: (new Date().getTime() / 1000) - timeInterval }}).toArray( (err, docs) => {
+    collection.find({date: { $gt: (new Date().getTime() / 1000) - timeInterval }}).toArray( (err, docs) => {
         res.send(docs)
     });
 });
