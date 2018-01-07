@@ -21,6 +21,59 @@ function onTimeIntervalChange() {
     loadCharts(selectedInterval);
 }
 
+
+function clearCharts() {
+    let chartsDiv = document.getElementById("charts");
+    while (chartsDiv.firstChild) {
+        chartsDiv.removeChild(chartsDiv.firstChild);
+    }
+}
+
+function createCanvasAndAddToPage(coin, dates, prices) {
+    let chartsDiv = document.getElementById("charts");
+    // create coin header
+    let h = document.createElement("h3");
+    h.innerText = coin;
+    chartsDiv.append(h);
+
+    let canvas = document.createElement("canvas");
+    canvas.id = "canvas-" + coin;
+
+
+    let ctx = canvas.getContext('2d');
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: dates,
+            datasets: [{
+                backgroundColor: 'rgb(255, 99, 132)',
+                borderColor: 'rgb(255, 99, 132)',
+                data: prices[coin],
+            }]
+        },
+        options: {
+            legend: {
+                display: false
+            },
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: false
+                    }
+                }]
+            },
+            animation: {
+                duration: 0, // general animation time
+            },
+            hover: {
+                animationDuration: 0, // duration of animations when hovering an item
+            },
+            responsiveAnimationDuration: 0, // animation duration after a resize
+        }
+    });
+    chartsDiv.append(h);
+}
+
 function loadCharts(interval) {
     let dates = [];
     let balances = {};
@@ -52,66 +105,31 @@ function loadCharts(interval) {
     }).then((pricesData) => {
         // Calculate USDT value of balances according to prices
         let i = 0;
+        let totalPrice = 0.0;
         for (let p of pricesData) {
             for (let coin of Object.keys(balances)) {
+                let price = 0;
                 if (coin === "BTC") {
                     let pair = "BTCUSDT";
-                    let price = balances[coin].balances[i] * parseFloat(p.prices.data[pair]);
-                    prices[coin].push(price)
+                    price = balances[coin].balances[i] * parseFloat(p.prices.data[pair]);
                 } else {
                     let pair = coin + "BTC";
-                    let price = balances[coin].balances[i] * parseFloat(p.prices.data[pair]) * parseFloat(p.prices.data["BTCUSDT"]);
-                    prices[coin].push(price)
+                    price = balances[coin].balances[i] * parseFloat(p.prices.data[pair]) * parseFloat(p.prices.data["BTCUSDT"]);
                 }
+                prices[coin].push(price);
+                totalPrice += price;
             }
+            prices["USDTTOTAL"].push(totalPrice);
             dates.push(p.prices.date);
             i++;
         }
 
+        // draw totalUSDT graph first
+        createCanvasAndAddToPage("USDTTOTAL", dates, prices);
+
         // For every coin, draw a graph
-        let chartsDiv = document.getElementById("charts");
-        for (let coin of Object.keys(balances)) {
-            // create coin header
-            let h = document.createElement("h3");
-            h.innerText = coin;
-            chartsDiv.append(h);
-
-            // create a canvas and add to page
-            let canvas = document.createElement("canvas");
-            canvas.id = "canvas-" + coin;
-            chartsDiv.append(canvas);
-
-            let ctx = canvas.getContext('2d');
-            new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: dates,
-                    datasets: [{
-                        backgroundColor: 'rgb(255, 99, 132)',
-                        borderColor: 'rgb(255, 99, 132)',
-                        data: prices[coin],
-                    }]
-                },
-                options: {
-                    legend: {
-                        display: false
-                    },
-                    scales: {
-                        yAxes: [{
-                            ticks: {
-                                beginAtZero: false
-                            }
-                        }]
-                    },
-                    animation: {
-                        duration: 0, // general animation time
-                    },
-                    hover: {
-                        animationDuration: 0, // duration of animations when hovering an item
-                    },
-                    responsiveAnimationDuration: 0, // animation duration after a resize
-                }
-            });
+        for (let coin of Object.keys(balances).sort()) {
+            createCanvasAndAddToPage(coin, dates, prices);
         }
     }).catch((err) => {
         document.getElementById("errors").innerText = "Something went wrong, see console for error message.";
@@ -119,12 +137,6 @@ function loadCharts(interval) {
     });
 }
 
-function clearCharts() {
-    let chartsDiv = document.getElementById("charts");
-    while (chartsDiv.firstChild) {
-        chartsDiv.removeChild(chartsDiv.firstChild);
-    }
-}
 
 Chart.defaults.global.elements.point.radius = 1;
 Chart.defaults.global.elements.line.fill = false;
