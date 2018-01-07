@@ -21,6 +21,7 @@ MongoClient.connect(url, (err, client) => {
  */
 app.get('/api/prices', (req, res) => {
     let timeInterval = 60 * 60 * 24; // 1 day in seconds
+    debug("query parameter 'interval': " + req.query.interval);
     if(req.query.interval && typeof req.query.interval === "number"){
         timeInterval = req.query.interval;
     }
@@ -39,7 +40,8 @@ app.get('/api/prices', (req, res) => {
  */
 app.get('/api/balances', (req, res) => {
     let timeInterval = 60 * 60 * 24; // 1 day in seconds
-    if(req.query.interval && typeof req.query.interval === "number"){
+    debug("query parameter 'interval': " + req.query.interval);
+    if(req.query.interval && parseInt(req.query.interval, 10)){
         timeInterval = req.query.interval;
     }
     debug("interval is " + timeInterval);
