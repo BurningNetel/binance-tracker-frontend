@@ -93,6 +93,9 @@ function loadCharts(interval) {
                     }]
                 },
                 options: {
+                    legend: {
+                        display: false
+                    },
                     scales: {
                         yAxes: [{
                             ticks: {
