@@ -2,34 +2,37 @@
 
 <html lang="en">
 <head>
-  <meta charset="utf-8">
+    <meta charset="utf-8">
 
-  <title>Binance portfolio tracker</title>
-  <meta name="description" content="Binance portfolio tracker">
-  <meta name="author" content="Joep Seuren">
-
-  <!--link rel="stylesheet" href="css/styles.css?v=1.0"-->
-
-  <!--[if lt IE 9]>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.js"></script>
-  <![endif]-->
+    <title>Binance portfolio tracker</title>
+    <meta name="description" content="Binance portfolio tracker">
+    <meta name="author" content="Joep Seuren">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="css/bootstrap-grid.css">
 </head>
 
 <body>
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <h1>Binance Portfolio USDT worth</h1>
+            All values on Y axis are USDT according to the Binance exchange.
+            <div id="errors" style="color:red"></div>
+            <select id="time-interval" onchange="onTimeIntervalChange()">
+                <option value="3600">1h</option>
+                <option value="86400">1d</option>
+                <option value="604800">1w</option>
+                <option value="18144000">1m</option>
+            </select>
+            <hr>
+        </div>
+    </div>
+    <div class="row">
+        <div id="charts" class="col"></div>
+    </div>
+</div>
 
-
-    <h1>Binance Portfolio USDT worth</h1>
-    All values on Y axis are USDT according to the Binance exchange.
-    <div id="errors" style="color:red"></div>
-    <select id="time-interval" onchange="onTimeIntervalChange()">
-        <option value="3600">1h</option>
-        <option value="86400">1d</option>
-        <option value="604800">1w</option>
-        <option value="18144000">1m</option>
-    </select>
-    <hr>
-    <div id="charts"></div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.bundle.js" integrity="sha256-vyehT44mCOPZg7SbqfOZ0HNYXjPKgBCaqxBkW3lh6bg=" crossorigin="anonymous"></script>
-    <script src="/js/app.js"></script>
+<script src="js/lib/Chart.js"></script>
+<script src="js/app.js"></script>
 </body>
 </html>
