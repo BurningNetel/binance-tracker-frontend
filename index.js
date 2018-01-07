@@ -14,22 +14,36 @@ MongoClient.connect(url, (err, client) => {
     db = client.db(dbName);
 });
 
-
+/**
+ * Get latest prices
+ * By default 1 day of data
+ */
 app.get('/api/prices', (req, res) => {
+    let timeInterval = 60 * 60 * 24; // 1 day in seconds
+    if(req.query.seconds && typeof req.query.seconds === "number"){
+        timeInterval = req.query.seconds;
+    }
     // Get the documents collection
     const collection = db.collection('prices');
     // Find some documents
-    collection.find().toArray((err, docs) => {
+    collection.find({date: { $lt: (new Date().getTime() / 1000) - timeInterval }}).toArray((err, docs) => {
         res.send(docs)
     });
 });
 
-
+/**
+ * Get balances of portfolio
+ * By default 1 day of data
+ */
 app.get('/api/balances', (req, res) => {
+    let timeInterval = 60 * 60 * 24; // 1 day in seconds
+    if(req.query.seconds && typeof req.query.seconds === "number"){
+        timeInterval = req.query.seconds;
+    }
     // Get the documents collection
     const collection = db.collection('balances');
     // Find some documents
-    collection.find().toArray( (err, docs) => {
+    collection.find({date: { $lt: (new Date().getTime() / 1000) - timeInterval }}).toArray( (err, docs) => {
         res.send(docs)
     });
 });
