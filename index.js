@@ -3,14 +3,12 @@ const path = require('path');
 const debug = require('debug')("binance-frontend");
 const app = express();
 
-const MongoClient = require('mongodb').MongoClient;
-// Connection URL
-const url = 'mongodb://localhost:27017';
-// Database Name
-const dbName = 'crypto';
 const maxArraySize = 200;
+
+const MongoClient = require('mongodb').MongoClient;
+const url = 'mongodb://localhost:27017';
+const dbName = 'crypto';
 let db = undefined;
-// Use connect method to connect to the server
 MongoClient.connect(url, (err, client) => {
     debug("Connected successfully to server");
     db = client.db(dbName);
