@@ -30,7 +30,7 @@ function getInterval(req) {
  * Returns an array that has every n'th element inside of the original array.
  */
 function reduceSize(docs, maxSize) {
-    if(docs.size() < maxSize){
+    if(docs.size < maxSize){
         return docs;
     }
     let reducesDocs = [];
