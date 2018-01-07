@@ -71,7 +71,7 @@ function createCanvasAndAddToPage(coin, dates, prices) {
             responsiveAnimationDuration: 0, // animation duration after a resize
         }
     });
-    chartsDiv.append(h);
+    chartsDiv.append(canvas);
 }
 
 function initializeBalances(balancesData, balances, prices) {
