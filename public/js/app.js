@@ -131,6 +131,7 @@ function loadCharts(interval) {
             }
             prices["USDTTOTAL"].push(totalPrice);
             dates.push(p.prices.date);
+            totalPrice = 0.0;
             i++;
         }
 
