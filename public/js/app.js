@@ -95,9 +95,11 @@ function loadCharts(interval) {
                 },
                 options: {
                     scales: {
-                        yAxes: {
-                            beginAtZero: true
-                        }
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero:true
+                            }
+                        }]
                     },
                     animation: {
                         duration: 0, // general animation time
