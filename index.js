@@ -34,7 +34,7 @@ function reduceSize(docs, maxSize) {
         return docs;
     }
     let reducedDocs = [];
-    let n = Math.round(docs.size() / maxSize);
+    let n = Math.round(docs.length / maxSize);
 
     let i = 0;
     for (let doc of docs) {
