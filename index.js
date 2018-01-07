@@ -20,8 +20,8 @@ MongoClient.connect(url, (err, client) => {
  */
 app.get('/api/prices', (req, res) => {
     let timeInterval = 60 * 60 * 24; // 1 day in seconds
-    if(req.query.seconds && typeof req.query.seconds === "number"){
-        timeInterval = req.query.seconds;
+    if(req.query.interval && typeof req.query.interval === "number"){
+        timeInterval = req.query.interval;
     }
     // Get the documents collection
     const collection = db.collection('prices');
@@ -37,8 +37,8 @@ app.get('/api/prices', (req, res) => {
  */
 app.get('/api/balances', (req, res) => {
     let timeInterval = 60 * 60 * 24; // 1 day in seconds
-    if(req.query.seconds && typeof req.query.seconds === "number"){
-        timeInterval = req.query.seconds;
+    if(req.query.interval && typeof req.query.interval === "number"){
+        timeInterval = req.query.interval;
     }
     // Get the documents collection
     const collection = db.collection('balances');
