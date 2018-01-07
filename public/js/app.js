@@ -74,33 +74,43 @@ function createCanvasAndAddToPage(coin, dates, prices) {
     chartsDiv.append(h);
 }
 
+function initializeBalances(balancesData, balances, prices) {
+    let initialBalances = balancesData[0].balances;
+    for (let coin of Object.keys(initialBalances)) {
+        balances[coin] = {};
+        balances[coin].balances = [];
+        balances[coin].hasBalance = false;
+        prices[coin] = [];
+    }
+    prices["USDTTOTAL"] = [];
+}
+
+function extractBalances(balancesData, balances) {
+    for (let b of balancesData) {
+        for (let coin of Object.keys(b.balances)) {
+            let balance = parseFloat(b.balances[coin].free) + parseFloat(b.balances[coin].locked);
+            if (balance > 0.0) balances[coin].hasBalance = true;
+            balances[coin].balances.push(balance);
+        }
+    }
+}
+
+function removeEmptyCoins(balances) {
+    for (let coin of Object.keys(balances)) {
+        if (!balances[coin].hasBalance) {
+            delete balances[coin];
+        }
+    }
+}
+
 function loadCharts(interval) {
     let dates = [];
     let balances = {};
     let prices = {};
     getBalances(interval).then((balancesData) => {
-        // initialize balances
-        let initialBalances = balancesData[0].balances;
-        for (let coin of Object.keys(initialBalances)) {
-            balances[coin] = {};
-            balances[coin].balances = [];
-            balances[coin].hasBalance = false;
-            prices[coin] = [];
-        }
-        // extract balances
-        for (let b of balancesData) {
-            for (let coin of Object.keys(b.balances)) {
-                let balance = parseFloat(b.balances[coin].free) + parseFloat(b.balances[coin].locked);
-                if (balance > 0.0) balances[coin].hasBalance = true;
-                balances[coin].balances.push(balance);
-            }
-        }
-        // remove empty coins
-        for (let coin of Object.keys(balances)) {
-            if (!balances[coin].hasBalance) {
-                delete balances[coin];
-            }
-        }
+        initializeBalances(balancesData, balances, prices);
+        extractBalances(balancesData, balances);
+        removeEmptyCoins(balances);
         return getPrices(interval);
     }).then((pricesData) => {
         // Calculate USDT value of balances according to prices
