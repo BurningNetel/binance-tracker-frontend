@@ -126,6 +126,7 @@ function clearCharts() {
     }
 }
 
-Chart.defaults.global.elements.point.radius = 0;
+Chart.defaults.global.elements.point.radius = 1;
+Chart.defaults.global.elements.line.fill = false;
 Chart.defaults.global.elements.line.stepped = true;
 loadCharts(86400);
