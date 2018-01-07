@@ -71,12 +71,16 @@ function loadCharts(interval) {
         // For every coin, draw a graph
         let chartsDiv = document.getElementById("charts");
         for (let coin of Object.keys(balances)) {
+            // create coin header
             let h = document.createElement("h3");
             h.innerText = coin;
-            chartsDiv.body.appendChild(h);
+            chartsDiv.append(h);
+
+            // create a canvas and add to page
             let canvas = document.createElement("canvas");
             canvas.id = "canvas-" + coin;
-            chartsDiv.body.appendChild(canvas);
+            chartsDiv.append(canvas);
+
             let ctx = canvas.getContext('2d');
             new Chart(ctx, {
                 type: 'line',
