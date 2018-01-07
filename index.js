@@ -1,5 +1,6 @@
 const express = require('express');
 const path = require('path');
+const debug = require('debug')("binance-frontend");
 const app = express();
 
 const MongoClient = require('mongodb').MongoClient;
@@ -10,7 +11,7 @@ const dbName = 'crypto';
 let db = undefined;
 // Use connect method to connect to the server
 MongoClient.connect(url, (err, client) => {
-    console.log("Connected successfully to server");
+    debug("Connected successfully to server");
     db = client.db(dbName);
 });
 
@@ -23,6 +24,7 @@ app.get('/api/prices', (req, res) => {
     if(req.query.interval && typeof req.query.interval === "number"){
         timeInterval = req.query.interval;
     }
+    debug("interval is " + timeInterval);
     // Get the documents collection
     const collection = db.collection('prices');
     // Find some documents
@@ -40,6 +42,7 @@ app.get('/api/balances', (req, res) => {
     if(req.query.interval && typeof req.query.interval === "number"){
         timeInterval = req.query.interval;
     }
+    debug("interval is " + timeInterval);
     // Get the documents collection
     const collection = db.collection('balances');
     // Find some documents
