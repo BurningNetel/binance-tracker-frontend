@@ -125,7 +125,9 @@ function loadCharts() {
     let dates = [];
     let balances = {};
     let prices = {};
-    Promise.all([getBalances(), getPrices()]).then((balancesData, pricesData) => {
+    Promise.all([getBalances(), getPrices()]).then((data) => {
+        let balancesData = data[0];
+        let pricesData = data[1];
         initializeBalances(balancesData, balances, prices);
         extractBalances(balancesData, balances);
         removeEmptyCoins(balances);
