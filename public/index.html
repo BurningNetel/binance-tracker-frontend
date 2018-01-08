@@ -13,11 +13,20 @@
 <h1>Binance Portfolio USDT worth</h1>
 All values on Y axis are USDT according to the Binance exchange.
 <div id="errors" style="color:red"></div>
+<label for="time-interval">Timespan: </label>
 <select id="time-interval" onchange="onTimeIntervalChange()">
     <option value="3600">1h</option>
     <option value="86400" selected>1d</option>
     <option value="604800">1w</option>
     <option value="18144000">1m</option>
+</select>
+<label for="maxArraySize">Datapoints: </label>
+<select id="maxArraySize" onchange="onMaxArraySizeChange()">
+    <option value="250" selected>250</option>
+    <option value="500">500</option>
+    <option value="1000">1000</option>
+    <option value="2000">2000</option>
+    <option value="0">All - WARNING: this is a lot of data!</option>
 </select>
 <hr>
 <div id="charts"></div>

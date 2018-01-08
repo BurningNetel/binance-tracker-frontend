@@ -1,5 +1,12 @@
-function getPrices(interval) {
-    return fetch('/api/prices/?interval=' + interval, {
+let maxArraySize = 250;
+let interval = 86400;
+
+function getQueryParams() {
+    return "?interval=" + interval + "&maxArraySize=" + maxArraySize;
+}
+
+function getPrices() {
+    return fetch('/api/prices/' + getQueryParams(), {
         method: 'get'
     }).then((res) => res.json()).then((data) => {
         console.log(data);
@@ -7,8 +14,8 @@ function getPrices(interval) {
     })
 }
 
-function getBalances(interval) {
-    return fetch('/api/balances/?interval=' + interval, {
+function getBalances() {
+    return fetch('/api/balances/' + getQueryParams(), {
         method: 'get'
     }).then((res) => res.json()).then((data) => {
         return data
@@ -16,9 +23,15 @@ function getBalances(interval) {
 }
 
 function onTimeIntervalChange() {
-    let selectedInterval = document.getElementById("time-interval").value;
+    interval = document.getElementById("time-interval").value;
     clearCharts();
-    loadCharts(selectedInterval);
+    loadCharts();
+}
+
+function onMaxArraySizeChange() {
+    maxArraySize = document.getElementById("maxArraySize").value;
+    clearCharts();
+    loadCharts();
 }
 
 
@@ -103,15 +116,15 @@ function removeEmptyCoins(balances) {
     }
 }
 
-function loadCharts(interval) {
+function loadCharts() {
     let dates = [];
     let balances = {};
     let prices = {};
-    getBalances(interval).then((balancesData) => {
+    getBalances().then((balancesData) => {
         initializeBalances(balancesData, balances, prices);
         extractBalances(balancesData, balances);
         removeEmptyCoins(balances);
-        return getPrices(interval);
+        return getPrices();
     }).then((pricesData) => {
         // Calculate USDT value of balances according to prices
         let i = 0;
@@ -152,4 +165,4 @@ function loadCharts(interval) {
 Chart.defaults.global.elements.point.radius = 1;
 Chart.defaults.global.elements.line.fill = false;
 Chart.defaults.global.elements.line.stepped = true;
-loadCharts(86400);
+loadCharts();

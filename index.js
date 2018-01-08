@@ -3,7 +3,7 @@ const path = require('path');
 const debug = require('debug')("binance-frontend");
 const app = express();
 
-const maxArraySize = 200;
+const MAX_ARRAY_SIZE = 200;
 
 const MongoClient = require('mongodb').MongoClient;
 const url = 'mongodb://localhost:27017';
@@ -17,18 +17,28 @@ MongoClient.connect(url, (err, client) => {
 function getInterval(req) {
     let timeInterval = 60 * 60 * 24; // 1 day in seconds
     debug("query parameter 'interval': " + req.query.interval);
-    if (req.query.interval && parseInt(req.query.interval, 10)) {
+    if (req.query.interval && parseInt(req.query.interval)) {
         timeInterval = req.query.interval;
     }
     debug("interval is " + timeInterval);
     return timeInterval;
 }
 
+function getMaxArraySize(req) {
+    if(req.query.maxArraySize && parseInt(req.query.maxArraySize)){
+        return req.query.maxArraySize;
+    }
+    return MAX_ARRAY_SIZE;
+}
+
 /**
  * Returns an array that has every n'th element inside of the original array.
  */
 function reduceSize(docs, maxSize) {
-    if(docs.length < maxSize){
+    if(docs.length < maxSize) {
+        return docs;
+    }
+    if(maxSize === 0){
         return docs;
     }
     let reducedDocs = [];
@@ -50,6 +60,7 @@ function reduceSize(docs, maxSize) {
  */
 app.get('/api/prices', (req, res) => {
     let timeInterval = getInterval(req);
+    let maxArraySize = getMaxArraySize(req);
 
     const collection = db.collection('prices');
     collection.find({date: {$gt: (new Date().getTime() / 1000) - timeInterval}}).toArray((err, docs) => {
@@ -63,6 +74,7 @@ app.get('/api/prices', (req, res) => {
  */
 app.get('/api/balances', (req, res) => {
     let timeInterval = getInterval(req);
+    let maxArraySize = getMaxArraySize(req);
 
     const collection = db.collection('balances');
     collection.find({date: {$gt: (new Date().getTime() / 1000) - timeInterval}}).toArray((err, docs) => {
