@@ -24,8 +24,9 @@ function getInterval(req) {
     return timeInterval;
 }
 
+
 function getMaxArraySize(req) {
-    if((req.query.maxArraySize || req.query.maxArraySize === 0 )&& parseInt(req.query.maxArraySize)){
+    if(req.query.maxArraySize && parseInt(req.query.maxArraySize)){
         return req.query.maxArraySize;
     }
     return MAX_ARRAY_SIZE;
@@ -35,10 +36,11 @@ function getMaxArraySize(req) {
  * Returns an array that has every n'th element inside of the original array.
  */
 function reduceSize(docs, maxSize) {
-    if(docs.length < maxSize) {
+    debug("maxsize: " + maxSize);
+    if(maxSize == -1){
         return docs;
     }
-    if(maxSize === 0){
+    if(docs.length < maxSize) {
         return docs;
     }
     let reducedDocs = [];
