@@ -22,18 +22,23 @@ function getBalances() {
     })
 }
 
-function onTimeIntervalChange() {
-    interval = document.getElementById("time-interval").value;
+function applyChanges() {
     clearCharts();
     loadCharts();
+}
+
+function onTimeIntervalChange() {
+    interval = document.getElementById("time-interval").value;
+    document.getElementById("time-interval-custom").value = interval;
+}
+
+function onCustomTimeIntervalChange() {
+    interval = document.getElementById("time-interval-custom").value;
 }
 
 function onMaxArraySizeChange() {
     maxArraySize = document.getElementById("maxArraySize").value;
-    clearCharts();
-    loadCharts();
 }
-
 
 function clearCharts() {
     let chartsDiv = document.getElementById("charts");
@@ -120,12 +125,11 @@ function loadCharts() {
     let dates = [];
     let balances = {};
     let prices = {};
-    getBalances().then((balancesData) => {
+    Promise.all([getBalances(), getPrices()]).then((balancesData, pricesData) => {
         initializeBalances(balancesData, balances, prices);
         extractBalances(balancesData, balances);
         removeEmptyCoins(balances);
-        return getPrices();
-    }).then((pricesData) => {
+
         // Calculate USDT value of balances according to prices
         let i = 0;
         let totalPrice = 0.0;
@@ -155,6 +159,7 @@ function loadCharts() {
         for (let coin of Object.keys(balances).sort()) {
             createCanvasAndAddToPage(coin, dates, prices);
         }
+
     }).catch((err) => {
         document.getElementById("errors").innerText = "Something went wrong, see console for error message.";
         console.log(err);
