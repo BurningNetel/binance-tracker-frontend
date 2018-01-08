@@ -25,7 +25,7 @@ function getInterval(req) {
 }
 
 function getMaxArraySize(req) {
-    if(req.query.maxArraySize && parseInt(req.query.maxArraySize)){
+    if((req.query.maxArraySize || req.query.maxArraySize === 0 )&& parseInt(req.query.maxArraySize)){
         return req.query.maxArraySize;
     }
     return MAX_ARRAY_SIZE;
