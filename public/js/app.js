@@ -51,6 +51,7 @@ function createCanvasAndAddToPage(chartsDiv, dates, prices) {
     let canvas = document.createElement("canvas");
     let ctx = canvas.getContext('2d');
     new Chart(ctx, {
+        type: "line",
         data: {
             labels: dates,
             datasets: [{
