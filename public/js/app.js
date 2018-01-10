@@ -63,13 +63,11 @@ function createCanvasAndAddToPage(coin, dates, prices) {
         data: {
             labels: dates,
             datasets: [{
-                label: "usdt",
                 backgroundColor: 'rgb(255, 99, 132)',
                 borderColor: 'rgb(255, 99, 132)',
                 data: prices[coin].usdt,
                 yAxisID: "usdt"
             }, {
-                label: "btc",
                 backgroundColor: 'rgb(99, 255, 132)',
                 borderColor: 'rgb(99, 255, 132)',
                 data: prices[coin].btc,
