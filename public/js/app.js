@@ -63,11 +63,13 @@ function createCanvasAndAddToPage(coin, dates, prices) {
         data: {
             labels: dates,
             datasets: [{
+                label: "usdt",
                 backgroundColor: 'rgb(255, 99, 132)',
                 borderColor: 'rgb(255, 99, 132)',
                 data: prices[coin].usdt,
                 yAxisID: "usdt"
             }, {
+                label: "btc",
                 backgroundColor: 'rgb(99, 255, 132)',
                 borderColor: 'rgb(99, 255, 132)',
                 data: prices[coin].btc,
@@ -121,9 +123,9 @@ function initializeBalances(balancesData, balances, prices) {
         balances[coin] = {};
         balances[coin].balances = [];
         balances[coin].hasBalance = false;
-        prices[coin] = [];
+        prices[coin] = {'usdt': [], 'btc': []};
     }
-    prices["USDTTOTAL"] = [];
+    prices["USDTTOTAL"] = {'usdt': [], 'btc': []};
 }
 
 function extractBalances(balancesData, balances) {
@@ -171,13 +173,15 @@ function loadCharts() {
                     usdtprice = balances[coin].balances[i] * parseFloat(p.prices.data[pair]) * parseFloat(p.prices.data["BTCUSDT"]);
                     btcprice = balances[coin].balances[i] * parseFloat(p.prices.data[pair]);
                 }
-                prices[coin].push({'btc': btcprice, 'usdt': usdtprice});
+                prices[coin].btc.push(btcprice);
+                prices[coin].usdt.push(usdtprice);
                 totalPrice['usdt'] += usdtprice;
                 totalPrice['btc'] += btcprice;
             }
-            prices["USDTTOTAL"].push(totalPrice);
+            prices["USDTTOTAL"].btc.push(totalPrice['btc']);
+            prices["USDTTOTAL"].usdt.push(totalPrice['usdt']);
             dates.push(p.prices.date);
-            totalPrice = 0.0;
+            totalPrice = {'btc': 0.0, 'usdt': 0.0};
             i++;
         }
 
