@@ -60,16 +60,26 @@ function createCanvasAndAddToPage(coin, dates, prices) {
 
     let ctx = canvas.getContext('2d');
     new Chart(ctx, {
-        type: 'line',
         data: {
             labels: dates,
             datasets: [{
+                label: "usdt",
                 backgroundColor: 'rgb(255, 99, 132)',
                 borderColor: 'rgb(255, 99, 132)',
-                data: prices[coin],
+                data: prices[coin].usdt,
+                yAxisID: "usdt"
+            }, {
+                label: "btc",
+                backgroundColor: 'rgb(99, 255, 132)',
+                borderColor: 'rgb(99, 255, 132)',
+                data: prices[coin].btc,
+                yAxisID: "btc"
             }]
         },
         options: {
+            responsive: true,
+            hoverMode: 'index',
+            stacked: false,
             legend: {
                 display: false
             },
@@ -77,7 +87,22 @@ function createCanvasAndAddToPage(coin, dates, prices) {
                 yAxes: [{
                     ticks: {
                         beginAtZero: false
-                    }
+                    },
+                    type: "linear",
+                    display: true,
+                    position: "left",
+                    id: "usdt"
+                }, {
+                    ticks: {
+                        beginAtZero: false
+                    },
+                    type: "linear",
+                    display: true,
+                    position: "right",
+                    id: "btc",
+                    gridLines: {
+                        drawOnChartArea: false, // only want the grid lines for one axis to show up
+                    },
                 }]
             },
             animation: {
@@ -134,19 +159,23 @@ function loadCharts() {
 
         // Calculate USDT value of balances according to prices
         let i = 0;
-        let totalPrice = 0.0;
+        let totalPrice = {'btc': 0.0, 'usdt': 0.0};
         for (let p of pricesData) {
             for (let coin of Object.keys(balances)) {
-                let price = 0;
+                let usdtprice = 0;
+                let btcprice = 0;
                 if (coin === "BTC") {
                     let pair = "BTCUSDT";
-                    price = balances[coin].balances[i] * parseFloat(p.prices.data[pair]);
+                    usdtprice = balances[coin].balances[i] * parseFloat(p.prices.data[pair]);
+                    btcprice = balances[coin].balances[i];
                 } else {
                     let pair = coin + "BTC";
-                    price = balances[coin].balances[i] * parseFloat(p.prices.data[pair]) * parseFloat(p.prices.data["BTCUSDT"]);
+                    usdtprice = balances[coin].balances[i] * parseFloat(p.prices.data[pair]) * parseFloat(p.prices.data["BTCUSDT"]);
+                    btcprice = balances[coin].balances[i] * parseFloat(p.prices.data[pair]);
                 }
-                prices[coin].push(price);
-                totalPrice += price;
+                prices[coin].push({'btc': btcprice, 'usdt': usdtprice});
+                totalPrice['usdt'] += usdtprice;
+                totalPrice['btc'] += btcprice;
             }
             prices["USDTTOTAL"].push(totalPrice);
             dates.push(p.prices.date);
