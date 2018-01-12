@@ -47,20 +47,38 @@ function clearCharts() {
     }
 }
 
-function createCanvasAndAddToPage(chartsDiv, dates, prices) {
+function createCanvasAndAddToPage(coin, dates, prices) {
+    let chartsDiv = document.getElementById("charts");
+    // create coin header
+    let h = document.createElement("h3");
+    h.innerText = coin;
+    chartsDiv.append(h);
+
     let canvas = document.createElement("canvas");
+    canvas.id = "canvas-" + coin;
+
+
     let ctx = canvas.getContext('2d');
     new Chart(ctx, {
-        type: "line",
+        type:'label',
         data: {
             labels: dates,
             datasets: [{
                 backgroundColor: 'rgb(255, 99, 132)',
                 borderColor: 'rgb(255, 99, 132)',
-                data: prices,
+                data: prices[coin].usdt,
+                yAxisID: "usdt"
+            }, {
+                backgroundColor: 'rgb(99, 255, 132)',
+                borderColor: 'rgb(99, 255, 132)',
+                data: prices[coin].btc,
+                yAxisID: "btc"
             }]
         },
         options: {
+            responsive: true,
+            hoverMode: 'index',
+            stacked: false,
             legend: {
                 display: false
             },
@@ -68,7 +86,22 @@ function createCanvasAndAddToPage(chartsDiv, dates, prices) {
                 yAxes: [{
                     ticks: {
                         beginAtZero: false
-                    }
+                    },
+                    type: "linear",
+                    display: true,
+                    position: "left",
+                    id: "usdt"
+                }, {
+                    ticks: {
+                        beginAtZero: false
+                    },
+                    type: "linear",
+                    display: true,
+                    position: "right",
+                    id: "btc",
+                    gridLines: {
+                        drawOnChartArea: false, // only want the grid lines for one axis to show up
+                    },
                 }]
             },
             animation: {
@@ -139,38 +172,22 @@ function loadCharts() {
                     usdtprice = balances[coin].balances[i] * parseFloat(p.prices.data[pair]) * parseFloat(p.prices.data["BTCUSDT"]);
                     btcprice = balances[coin].balances[i] * parseFloat(p.prices.data[pair]);
                 }
-                prices[coin].btc.push(btcprice);
-                prices[coin].usdt.push(usdtprice);
+                prices[coin].push({'btc': btcprice, 'usdt': usdtprice});
                 totalPrice['usdt'] += usdtprice;
                 totalPrice['btc'] += btcprice;
             }
-            prices["USDTTOTAL"].btc.push(totalPrice['btc']);
-            prices["USDTTOTAL"].usdt.push(totalPrice['usdt']);
+            prices["USDTTOTAL"].push(totalPrice);
             dates.push(p.prices.date);
-            totalPrice = {'btc': 0.0, 'usdt': 0.0};
+            totalPrice = 0.0;
             i++;
         }
 
-        let chartsDiv = document.getElementById("charts");
-        let h = document.createElement("h3");
-        h.innerText = "TOTAL-BTC";
-        chartsDiv.append(h);
-        createCanvasAndAddToPage(chartsDiv, dates, prices["USDTTOTAL"].btc);
-        h = document.createElement("h3");
-        h.innerText = "TOTAL-USDT";
-        chartsDiv.append(h);
-        createCanvasAndAddToPage(chartsDiv, dates, prices["USDTTOTAL"].usdt);
+        // draw totalUSDT graph first
+        createCanvasAndAddToPage("USDTTOTAL", dates, prices);
 
-        // For every coin, draw two graphs
+        // For every coin, draw a graph
         for (let coin of Object.keys(balances).sort()) {
-            let h = document.createElement("h3");
-            h.innerText = coin + "-BTC";
-            chartsDiv.append(h);
-            createCanvasAndAddToPage(chartsDiv, dates, prices[coin].btc);
-            h = document.createElement("h3");
-            h.innerText = coin + "-USDT";
-            chartsDiv.append(h);
-            createCanvasAndAddToPage(chartsDiv, dates, prices[coin].usdt);
+            createCanvasAndAddToPage(coin, dates, prices);
         }
 
     }).catch((err) => {
