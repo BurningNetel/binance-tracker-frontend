@@ -60,7 +60,7 @@ function createCanvasAndAddToPage(coin, dates, prices) {
 
     let ctx = canvas.getContext('2d');
     new Chart(ctx, {
-        type:'label',
+        type: 'label',
         data: {
             labels: dates,
             datasets: [{
@@ -172,13 +172,14 @@ function loadCharts() {
                     usdtprice = balances[coin].balances[i] * parseFloat(p.prices.data[pair]) * parseFloat(p.prices.data["BTCUSDT"]);
                     btcprice = balances[coin].balances[i] * parseFloat(p.prices.data[pair]);
                 }
-                prices[coin].push({'btc': btcprice, 'usdt': usdtprice});
+                prices[coin].btc.push(btcprice);
+                prices[coin].usdt.push(usdtprice);
                 totalPrice['usdt'] += usdtprice;
                 totalPrice['btc'] += btcprice;
             }
             prices["USDTTOTAL"].push(totalPrice);
             dates.push(p.prices.date);
-            totalPrice = 0.0;
+            totalPrice = {'btc': 0.0, 'usdt': 0.0};
             i++;
         }
 
