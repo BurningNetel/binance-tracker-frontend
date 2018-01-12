@@ -177,7 +177,8 @@ function loadCharts() {
                 totalPrice['usdt'] += usdtprice;
                 totalPrice['btc'] += btcprice;
             }
-            prices["USDTTOTAL"].push(totalPrice);
+            prices["USDTTOTAL"].btc.push(totalPrice['btc']);
+            prices["USDTTOTAL"].usdt.push(totalPrice['usdt']);
             dates.push(p.prices.date);
             totalPrice = {'btc': 0.0, 'usdt': 0.0};
             i++;
