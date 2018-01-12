@@ -60,7 +60,7 @@ function createCanvasAndAddToPage(coin, dates, prices) {
 
     let ctx = canvas.getContext('2d');
     new Chart(ctx, {
-        type: 'label',
+        type: 'line',
         data: {
             labels: dates,
             datasets: [{
