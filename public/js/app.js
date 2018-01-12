@@ -84,7 +84,7 @@ function createCanvasAndAddToPage(chartsDiv, dates, prices) {
 }
 
 function initializeBalances(balancesData, balances, prices) {
-    let initialBalances = balancesData[0].balances;
+    let initialBalances = balancesData[balancesData.length - 1].balances;
     for (let coin of Object.keys(initialBalances)) {
         balances[coin] = {};
         balances[coin].balances = [];
